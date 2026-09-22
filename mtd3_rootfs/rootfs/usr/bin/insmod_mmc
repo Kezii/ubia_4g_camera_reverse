@@ -1,0 +1,8 @@
+#!/bin/sh
+insmod /lib/modules/mmc_core.ko
+insmod /lib/modules/jzmmc.ko
+insmod /lib/modules/mmc_block.ko
+#echo 1 > /sys/devices/platform/jzmmc_v1.2.0/detect_on
+insmod /lib/modules/fat.ko
+#insmod /system/fat.ko
+insmod /lib/modules/vfat.ko

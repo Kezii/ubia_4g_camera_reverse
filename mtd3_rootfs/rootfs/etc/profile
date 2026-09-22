@@ -1,0 +1,17 @@
+# Set PS1
+if [ "$PS1" ]; then
+	if [ "`id -u`" -eq 0 ]; then
+		export PS1='[\u@\h:\W]# '
+	else
+		export PS1='[\u@\h:\W]$ '
+	fi
+fi
+
+# Set terminal env
+export PATH=/system/bin:/bin:/sbin:/usr/bin:/usr/sbin
+export LD_LIBRARY_PATH=/system/lib:/usr/lib
+
+# Set directoty and file default create permission
+umask 022
+
+[ -f /etc/banner ] && cat /etc/banner

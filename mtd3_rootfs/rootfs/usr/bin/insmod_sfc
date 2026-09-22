@@ -1,0 +1,7 @@
+#!/bin/sh
+
+insmod /lib/modules/jz_sfc.ko
+ubia_unlock_flash
+#insmod /lib/modules/lzo_compress.ko
+insmod /lib/modules/jffs2.ko
+insmod /lib/modules/squashfs.ko

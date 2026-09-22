@@ -1,0 +1,107 @@
+#!/bin/sh
+insmod_sfc
+/bin/ubia_watchdog  &
+cd /bin/
+./ubia_first &
+cd -
+#/bin/sample-Encoder-video&
+# Set mdev
+#insmod_mmc 
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+/sbin/mdev -s #&& echo "mdev is ok......"
+#touch /tmp/app
+
+bootup_timer start >> /tmp/bootup_time
+# Set Global Environment
+export PATH=/system/bin:/bin:/sbin:/usr/bin:/usr/sbin
+export LD_LIBRARY_PATH=/system/lib:/usr/lib
+
+# Set transfer mode with MCU Environment (IIC or UART)
+export TRANSFER_MODE=IIC
+
+# Set Product mode with camera Environment (SUIT or SINGLE)
+export PRODUCT_MODE=SINGLE
+
+# Set callback script path Environment (default /usr/bin/shutdown.sh)
+export CALLBACK_SCRIPT=
+
+# Set Sensor Environment
+export SENSOR=mis2008
+
+# Set SOC Type Environment
+export SOC_TYPE=SOC_T31Z
+
+bootup_timer prog_run >> /tmp/bootup_time
+
+echo "" >> /etc/profile
+echo "# Set transfer mode ENV" >> /etc/profile
+echo "export TRANSFER_MODE=IIC" >> /etc/profile
+
+echo "" >> /etc/profile
+echo "# Set product mode ENV" >> /etc/profile
+echo "export PRODUCT_MODE=SINGLE" >> /etc/profile
+
+echo "" >> /etc/profile
+echo "# Set callback script path Environment (default /usr/bin/shutdown.sh)" >> /etc/profile
+echo "export CALLBACK_SCRIPT=" >> /etc/profile
+
+echo "" >> /etc/profile
+echo "# Set Sensor Environment" >> /etc/profile
+echo "export SENSOR=mis2008" >> /etc/profile
+
+echo "" >> /etc/profile
+echo "# Set SOC Type Environment" >> /etc/profile
+echo "export SOC_TYPE=SOC_T31Z" >> /etc/profile
+
+hostname -F /etc/hostname
+
+# Set mdev
+#echo /sbin/mdev > /proc/sys/kernel/hotplug
+#/sbin/mdev -s #&& echo "mdev is ok......"
+
+# networking
+ifconfig lo up &
+
+# mount jffs2 rw partition
+#insmod_sfc
+mount -t jffs2 /dev/mtdblock5 /config
+
+#/bin/ubia_first&
+# Format config patition if it is invalid
+if [ ! -f /config/.tag ]; then
+    echo "Format config partition..."
+    umount -f /config
+    flash_eraseall /dev/mtd5
+    mount -t jffs2 /dev/mtdblock5 /config
+    cd /config
+    cp -r /config_bak/* .
+    touch .tag
+    cd /
+    echo "Done"
+fi
+
+mount -t squashfs /dev/mtdblock4 /system
+if [ $? -ne 0 ]; then
+    echo "mount system failed"
+    #recovery
+fi
+#insmod /system/videobuf2-vmalloc.ko
+#insmod /system/configfs.ko
+#insmod /system/libcomposite.ko
+#insmod /system/usbcamera.ko
+#bootup_timer uvc0 >> /tmp/bootup_time
+#/system/ucam-test3 &
+#bootup_timer uvc1 >> /tmp/bootup_time
+mount -t squashfs /dev/mtdblock8 /audio
+
+echo 100 > /proc/sys/vm/swappiness
+echo 16777216 > /sys/block/zram0/disksize
+mkswap /dev/zram0
+swapon /dev/zram0
+
+insmod_mmc
+#insmod /lib/modules/hichannel.ko
+bootup_timer all_done >> /tmp/bootup_time
+/system/ubia_t31 &
+#sleep 10
+#telnetd &

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ $TRANSFER_MODE = "IIC" ]; then
+	insmod /lib/modules/mmc_core.ko wifi_reset_prog_path=/usr/bin/reset_wifi_i2c
+else
+	insmod /lib/modules/mmc_core.ko wifi_reset_prog_path=/usr/bin/reset_wifi_uart
+fi
+insmod /lib/modules/jzmmc.ko
+insmod /lib/modules/bcmdhd.ko
+if [ $? -ne 0 ]; then
+    echo "wifi ko init failed"
+    exit 1
+fi
+
+ifconfig wlan0 up
+if [ $? -ne 0 ]; then
+    echo "wlan0 up failed"
+    exit 2
+fi

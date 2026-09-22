@@ -1,0 +1,6 @@
+#!/bin/sh
+
+zrtcam_test --master_reset
+
+sleep 4
+busybox reboot $@
