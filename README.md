@@ -50,7 +50,8 @@ model `S106-4G-3MP-EU` (2254), fw 1.0.19.23, MCU 1.0.5.11, U-Boot V027.
 - Both decode with `lzop -dc` (rc=2 "trailing garbage" = success). The pure-Rust
   `lzo` crate fails on the vendor LZO1X-999 streams (spurious early EOM); the
   C reference decoder is required. See `tools/lzof_extract.py` (verified
-  byte-identical re-extraction) and `tools/lzo_rust/` (candidate-start scanner).
+  byte-identical re-extraction) and `tools/lzo_scan.c` (raw-stream
+  candidate-start scanner).
 
 ## Boot chain (summary)
 
@@ -75,7 +76,8 @@ commented out). The 4G module (SIMCOM ASR Cat1) comes up on ttyUSB0-2;
    `system("/tmp/mnt/sdcard/ubia_test  &")` when `ubia_test` exists on the SD
    root (also `asrdebug /dev/ttyUSB0 &`, plus `clr_crc.txt`, `ubia_record.db`,
    `ubia-extlogo-hd/sd`, `ubia-4g-asr.tmp` features). Full analysis:
-   `mtd4_system/FINDINGS.md`. Runtime confirmed by `sd_output/probe.log`.
+   `mtd4_system/FINDINGS.md` (includes a boot-probe log excerpt as
+   runtime proof).
 2. **Login puzzle**: `/etc/shadow` `root::` (empty) but getty empty-password
    login failed; `/etc/passwd` root DES hash `ShRCX9PD3xxus` (salt `Sh`) not
    cracked (65 candidates). Planned bypass for exploit phase: bind-mount fake
@@ -93,13 +95,18 @@ commented out). The 4G module (SIMCOM ASR Cat1) comes up on ttyUSB0-2;
 7. **OTA path exists** (ubia_first flashcp to mtd1/2/3/4; A/B slots) — expect
    possible vendor-pushed updates while tethered.
 
-## Tools (see `tools/`)
+## Tools (`tools/`, see `tools/README.md`)
 
-- `mips_xref.py` — MIPS lui/addiu(+ori) string xref scanner for `ubia_t31`
+Analysis/extraction tools used for this dump (Python stdlib-only except
+`lzo_scan.c`, which needs liblzo2):
+
+- `lzof_extract.py` — vendor LZOF container extraction (kernel/rootfs).
+- `lzo_scan.c` — raw LZO1X-999 candidate-start scanner.
+- `mips_xref.py` — MIPS lui/addiu(+ori) vaddr xref scanner for `ubia_t31`
   (known limitation: cannot see arguments passed via **branch delay slots**;
   use `mips_dump.py` to confirm).
 - `mips_dump.py` — minimal MIPS32 disassembler with correct branch-target
   computation (r2 MIPS support is unreliable on this binary).
-- `lzof_extract.py` + `lzo_rust/` — vendor LZOF container extraction.
-- `console_probe.py`, `serial_flash_dump.py`, `make_sd.sh`, `check_sd.sh` —
-  serial/SD harness. `PHASE0_CHECKLIST.md`, `SD_PAYLOAD.md` — runbooks.
+
+Operational tooling (serial capture, SD payload, runbooks) belongs to the
+private companion project and is intentionally not published here.

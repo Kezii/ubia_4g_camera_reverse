@@ -13,8 +13,8 @@ rdinit=/linuxrc mtdparts=jz_sfc:256K(boot),352K(tag),2240K(kernel),3008K(rootfs)
 1728K(system),192K(config),32K(usr),64K(ae),256K(audio),32K(usr_bak),32K(vd),8M@0(all)
 lpj=6955008 quiet
 ```
-(U-Boot appends senv groups + `lzo_size/rd_start/rd_size/ubootV=V027` at boot;
-see `sd_output/probe.log` for the live cmdline.)
+(U-Boot appends senv groups + `lzo_size/rd_start/rd_size/ubootV=V027` at
+boot; the live cmdline was captured during a boot probe via the SD hook.)
 
 ### ENVI (senv variables) — set A (active)
 ```

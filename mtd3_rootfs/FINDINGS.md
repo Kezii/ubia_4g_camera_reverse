@@ -109,7 +109,7 @@ bootup_timer <marker> >> /tmp/bootup_time
 (cooked `videobuf2`, `configfs`, `libcomposite`, `usbcamera` — commented out
 in rcS), plus unversioned copies in `/lib/modules/`.
 
-## Runtime facts (from `sd_output/probe.log`)
+## Runtime facts (observed on a live boot via the SD hook)
 
 - PID1 = `{linuxrc} init`; SD mounted `/dev/mmcblk0p1 /tmp/mnt/sdcard vfat
   fmask=0022 dmask=0022`; `/system` ro squashfs; `/config` rw jffs2.

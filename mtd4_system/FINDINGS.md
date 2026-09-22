@@ -88,7 +88,7 @@ strings with `tools/mips_dump.py`.)
 
 ### Runtime confirmation
 
-`sd_output/probe.log` (single boot, SD inserted):
+Boot probe captured via the hook (single boot, SD inserted):
 ```
 === ubia_test probe run @ Sat Feb  1 00:00:01 UTC 2025 ===
 invoked_as=/tmp/mnt/sdcard/ubia_test pid=230 ppid=1
@@ -103,8 +103,8 @@ boot (and presumably on SD re-insertion) with root privileges.**
 
 ### Implications for the untethering plan
 
-- `sd_payload/ubia_test` (probe + later: rshell/bind-mounts) is the primary
-  persistence primitive — **confirmed, not assumed**.
+- The `ubia_test` hook is the primary persistence primitive —
+  **confirmed, not assumed**.
 - `asrdebug` on the SD gives a second, serial-bound script channel
   (`/dev/ttyUSB0` = 4G module AT port — caution: it talks to the modem).
 - The hook runs as root from the app's context; keep it fast/backgrounded
