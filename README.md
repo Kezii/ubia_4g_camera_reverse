@@ -16,19 +16,144 @@ auto-run hook).
 
 ## Device
 
-| Item         | Value                                                        |
-|--------------|--------------------------------------------------------------|
-| Model        | S106-4G-3MP-EU (ModelNum 2254, package 149)                  |
-| SoC          | Ingenic T31, MIPS32, "Turret-ZL"                             |
-| Device UID   | `HSUNBJT4PMPVDO5UOPEQ` (stored in mtd10)                     |
-| Firmware     | 1.0.19.23 (MCU 1.0.5.11)                                     |
-| Bootloader   | U-Boot V027, build 20230830-Turret-ZL                        |
-| Kernel       | 3.10.14-Archon                                               |
-| Hostname     | `Zeratul` (vendor-set in `/etc/hostname`)                    |
-| 4G module    | SIMCOM ASR Cat.1 (EC618); AT port `/dev/ttyUSB1`             |
-| Serial console | UART `ttyS2` @ 115200 (visible on USB as `/dev/ttyACM0`)  |
-| Wi-Fi        | Broadcom (`bcmdhd`); AP name `UBox_HSUN`, password `12345678`|
-| Vendor APN   | `bicsapn`                                                    |
+| Item           | Value                                                          |
+|----------------|----------------------------------------------------------------|
+| Model          | S106-4G-3MP-EU (ModelNum 2254, package 149)                    |
+| SoC            | Ingenic T31, MIPS32 Xburst 1.08 GHz, "Turret-ZL"               |
+| Companion MCU  | HiSilicon hi3861 (PMIC, PIR, BLE); UART `ttyS1`                |
+| Sensor         | `mis2008`, 3 MP (2304×1296); I2C address 0x30 on `i2c0`        |
+| Device UID     | `HSUNBJT4PMPVDO5UOPEQ` (stored in mtd10)                       |
+| Firmware       | 1.0.19.23 (SoC "liteos"); MCU 1.0.5.11                         |
+| Bootloader     | U-Boot V027, build 20230830-Turret-ZL                          |
+| Kernel         | 3.10.14-Archon                                                 |
+| Hostname       | `Zeratul` (vendor-set in `/etc/hostname`)                      |
+| Memory         | 64 MB DDR (43 MB OS + 22 MB video reserve)                     |
+| 4G module      | SIMCOM EC618 Cat.1, USB; AT port `/dev/ttyUSB1`                |
+| Serial console | UART `ttyS2` @ 115200 (visible on USB as `/dev/ttyACM0`)       |
+| Wi-Fi          | none on this variant (see "Wi-Fi leftovers" below)             |
+| Vendor APN     | `bicsapn`                                                      |
+
+## Hardware architecture
+
+The camera is a multi-chip product. The 4G module is the only uplink on
+this variant. The board has no Wi-Fi radio.
+
+```
+                 Ingenic T31 SoC
+     MIPS32 Xburst 1.08 GHz + RISC-V Tiziano core
+     (image pipeline, H.265, audio, 30 s WDT)
+  I2C0     |       | ttyS1       | USB        | ttyS2
+  --------+   +----+------+ +----+-------+  +-- console
+  mis2008 |   | hi3861 MCU | | SIMCOM     |
+  3 MP    |   | PMIC, PIR, | | EC618 4G   |
+  sensor  |   | BLE, SoC   | | Cat.1      |
+          |   | power gate | | module     |
+          |   +------------+ +------------+
+```
+
+| Chip                        | Role                                                        | Evidence in this repo                                              |
+|-----------------------------|-------------------------------------------------------------|--------------------------------------------------------------------|
+| Ingenic T31 ("Turret-ZL")   | Video SoC: image pipeline, H.265 encoder, audio, main app   | `mtd2_kernel/`, `mtd4_system/`                                     |
+| RISC-V "Tiziano" core (in SoC) | ISP 3A loops + person detection                          | `tx_isp_riscv_*`, "Riscv frame count" in `dump/dmesg.txt`          |
+| `mis2008` CMOS sensor, 3 MP | Image capture at 2304×1296, ~30 fps                         | "mis2008 chip found @ 0x30 (i2c0)" in `dump/dmesg.txt`             |
+| HiSilicon hi3861 MCU        | Battery + charging (PMIC), PIR motion input, BLE radio, SoC power gate | `HI3861`, `mcu_*` strings in `ubia_t31`; `/tmp/update_hi3861.bin` |
+| SIMCOM EC618, 4G Cat.1      | Cellular uplink                                             | `cfg_ec618_usb.ini`, `agentboot.bin`, `format_ec618.json` in `mtd4_system/squashfs/` |
+| XM25QH64C SPI NOR           | 8 MB flash, quad mode                                       | "the flash name is XM25QH64C" in `dump/dmesg.txt`                  |
+| 64 MB DDR                   | 43 MB for the OS, 22 MB for video buffers                   | Kernel RAM map; `rmem=22656K@0x29E0000` in the kernel command line |
+
+### Video path
+
+1. U-Boot reads the newest AE auto-learn snapshot from mtd7 and applies
+   the initial exposure, including the IR LED PWM duty, before the
+   kernel starts.
+2. The `mis2008` driver (build 2023-05-17) probes the sensor on `i2c0`,
+   address 0x30. The sensor power enable is GPIO 17 ("Set vbus gpio
+   17").
+3. Raw frames enter the T31 VIC (video input controller). The VIC
+   accepts MIPI CSI-2 (four channels, configurable lane count) and DVP
+   (8/10-bit, including Sony mode). The firmware does not log which
+   mode this sensor uses.
+4. The ISP pipeline ("tx-isp", build H20220209a) runs on the RISC-V
+   core, not on the MIPS core. It executes the 3A loops (AE, AWB, DPC,
+   DRC, gamma) and the day/night switch.
+5. At boot the kernel loads a 159 KB calibration blob (sensor library
+   date 2023-04-28). The tail of the mtd1 tag partition holds the
+   binary AE/ISP and RISC-V coprocessor tables (unparsed).
+6. The H.265 encoder (config `is_h264=0`) produces the main (768 kbit)
+   and sub (384 kbit) streams. The hardware nodes (`/dev/tx-isp`,
+   `/dev/isp-m0`, `/dev/framechan%d`, `/dev/soc_vpu`, `/dev/ipu`) are
+   owned by `ubia_first`.
+7. Motion detection (16×10 grid) and the Ingenic person-detection
+   library ("PersonDet v0.0.3", build 2024-10-24) gate the recording
+   and the cloud reporting.
+
+### MCU (HiSilicon hi3861)
+
+- In deep sleep the SoC is off. The hi3861 stays on at low power and
+  gates the power of the SoC and of the 4G module
+  (`mcu_ctr_4gT31Power`).
+- Wake sources: PIR motion, scheduled re-power
+  (`mcu_set_delay_poweron`), charging, and the cloud relay knock.
+- The "MCUHOST" thread in `ubia_t31` owns the UART (`ttyS1`). The
+  frames start with 0x7B and end with 0x7A.
+- The MCU has its own firmware (1.0.5.11 here). At boot the SoC reads
+  the version and the CRC. The SoC can update the MCU from
+  `/tmp/update_hi3861.bin` (`ubia_ota_update_hi3861`).
+- The PIR mode exists in three synced copies: `vd.PirMode`,
+  `usr.PirMode`, `mcu.PirMode`.
+- The local admin tool `/bin/to_t31` sends 16-byte UDP messages to
+  127.0.0.1:88; the MCUHOST thread relays them to the MCU. Commands:
+  `clrCrc`, `showhal`, `reset_module`, `usb_update`, `setrtc`,
+  `getrtc`, `setpirtask`, `getpirtask`, `testpirtask`, `testvpn`,
+  `configapn`.
+
+### 4G module (SIMCOM EC618)
+
+- A USB-attached Cat.1 module. Ports: `ttyUSB0` (debug console; the
+  `asrdebug` SD hook attaches here), `ttyUSB1` (AT commands),
+  `ttyACM0` (DFU port).
+- DFU toolchain in `/system`: `DownloadCLI`, `agentboot.bin`,
+  `cfg_ec618_usb.ini`, `format_ec618.json`, `adownload-tiny`.
+- The ASR voice model is updatable from the SD
+  (`ubia-4g-asr.tmp` → `/tmp/asr-update.bin` + the DFU flow).
+- The module reports the power and battery state. The SoC ADC channel
+  17 reads the battery voltage divider (senv `adc_value=110`).
+
+### SoC internals (T31)
+
+- CPU: MIPS32 "Xburst" @ 1.08 GHz (CCLK 1080 MHz), with FPU.
+- RISC-V "Tiziano" coprocessor: ISP 3A loops + person detection.
+- DDR 64 MB: 0x0–0x29DFFFF (42880 K) for the OS; 22656 K @ 0x29E0000
+  reserved for video buffers.
+- 30-second hardware watchdog (`t31_wdt`); `ubia_watchdog` keeps it
+  alive.
+- Audio: I2S engine. The microphone feeds the recording and the
+  built-in voice recognition (a `kiss_fft`-based engine in `ubia_t31`,
+  plus a "wow" wake-word server). The speaker plays the 13 prompts
+  from mtd8 and the siren.
+
+### UART map
+
+| Port  | Function                                                  |
+|-------|-----------------------------------------------------------|
+| `ttyS0` | `ubia_t31` opens it at boot ("uart0_init ok"); role not identified |
+| `ttyS1` | hi3861 MCU (0x7B…0x7A frames)                           |
+| `ttyS2` | Console @ 115200 = `/dev/ttyACM0` on USB                |
+
+### Wi-Fi leftovers (no radio on this variant)
+
+This variant has no Wi-Fi hardware. The image keeps files for sibling
+variants:
+
+- `insmod_wifi` (loads `bcmdhd.ko`) exists in `/usr/bin`, but rcS
+  never calls it and the module is not in the image.
+- `nvram.txt` for the AP6212A (a BCM43291-based 2.4 GHz chip) sits in
+  `/lib/firmware`.
+- `esp32_sdio.ko`, `btsdio.ko`, `bluetooth.ko` sit in `/system` — the
+  T23 sibling line uses an ESP32 over SDIO.
+- The BLE pairing code in `ubia_t31` refers to the hi3861 radio.
+- The `UBox_HSUN`/`12345678` AP identity in mtd10 is a cached default
+  for the Wi-Fi variants.
 
 ## How the dump was made
 
@@ -133,6 +258,7 @@ NTP.
 | `mtd0_boot/` … `mtd10_vd/` | one directory per partition: `partition.bin` (raw copy), `FINDINGS.md` (analysis), extracted files where applicable |
 | `dump/ubia_test`      | the SD card script that made the dump                                 |
 | `dump/probe.log`      | the output of that script                                             |
+| `dump/dmesg.txt`      | U-Boot console tail + kernel boot log (serial capture)                |
 | `tools/`              | the analysis and extraction tools (see `tools/README.md`)             |
 
 ## Flash map
@@ -237,6 +363,15 @@ See `tools/README.md` for usage. Summary:
 | `tools/mips_xref.py`   | finds references to an address inside `ubia_t31`                 |
 | `tools/mips_dump.py`   | disassembles a window of `ubia_t31`                              |
 
+## Related work
+
+The protocol side of these cameras (P4P cloud, its cipher, NAT
+traversal, LAN streaming) is documented in a separate open project for
+the sibling product (Ingenic T23): `ubox-p4p`. Same SDK family, same
+hi3861 MCU. Its docs decode the MCU UART opcode map and the cloud
+protocol. Offsets differ between the T23 and the T31. This repository
+stays on the hardware and the on-device reverse engineering.
+
 ## What is not in this repository
 
 - The serial console tooling, the exploit payload, and the project plan
@@ -244,6 +379,3 @@ See `tools/README.md` for usage. Summary:
 - The original `ubia_test` script also had an optional remote-shell
   part. The published `dump/ubia_test` contains only the probe and the
   dump.
-- A sibling product (a UBIA "ubox" P4P camera) is documented in a
-  separate project (`ubox-p4p`). The protocol and techniques transfer.
-  The offsets do not.

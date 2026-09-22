@@ -99,15 +99,23 @@ bootup_timer <marker> >> /tmp/bootup_time
   (**P2P `USER=admin` `PASS=888888`**, `UID=xxxxxxxxxxxx` placeholder),
   `webrtc_profile.ini` (WebRTC APM: AEC v2.1.201201, AGC, HP, NS, VAD),
   `alarm.info` (24B), `ZRT_Profile_Wifi_Debug_bak.ini` (DTIM tuning).
-- WiFi AP: `UBox_HSUN` / `12345678` (hostapd config for the single-camera AP
-  mode).
+- Cached WiFi AP identity `UBox_HSUN` / `12345678` (default for the
+  radio-bearing sibling variants; this 4G-only variant has no WiFi — see
+  the main README, "Wi-Fi leftovers").
 
-## Modules (`/lib/modules/3.10.14-Archon/`)
+## Modules
 
-`jz_sfc, jffs2, squashfs, mmc_core, jzmmc, mmc_block, fat, vfat, bcmdhd`
-(Broadcom WiFi), `motor, z7682inf, gpio_spi`, alarm LED, UVC/camera stack
-(cooked `videobuf2`, `configfs`, `libcomposite`, `usbcamera` — commented out
-in rcS), plus unversioned copies in `/lib/modules/`.
+`/lib/modules/` (unversioned): `jz_sfc, jffs2, squashfs, mmc_core, jzmmc,
+mmc_block, fat, vfat, nfs, nfsv2, nfsv3, lockd, sunrpc, zblkdev,
+libcomposite, motor, gpio_spi`.
+`/lib/modules/3.10.14-Archon/`: same set minus `libcomposite/motor/
+gpio_spi`.
+`/system` (squashfs): `alarm_led.ko, bluetooth.ko, btsdio.ko,
+esp32_sdio.ko` — the radio modules are for sibling variants (this variant
+has no WiFi chip; rcS loads no WiFi module).
+UVC/camera-stack modules (`videobuf2`, `configfs`, `usbcamera`) are
+referenced by commented-out rcS lines but their `.ko` files are not in
+the image.
 
 ## Runtime facts (observed on a live boot via the SD hook)
 

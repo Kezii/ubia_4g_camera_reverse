@@ -1,0 +1,1250 @@
+# U-Boot console tail (same capture session, previous boot cycle):
+Ver:20230830-Turret-ZL
+Find self-learning data is 2937,secort 14
+adc:17 110 1800, EV:2937, is night:1, pwm duty:-1, led mode:close 
+
+# Kernel dmesg, full boot (console ttyS2 @ 115200):
+
+[    0.000000] Initializing cgroup subsys cpu
+
+[    0.000000] Initializing cgroup subsys cpuacct
+
+[    0.000000] Linux version 3.10.14-Archon (shenchaobin@dell-Precision-Tower-3431) (gcc version 4.7.2 (Ingenic r2.3.3 2016.12) ) #4 PREEMPT Thu Mar 6 18:29:09 CST 2025
+
+[    0.000000] CPU0 RESET ERROR PC:1612689C
+
+[    0.000000] CPU0 revision is: 00d00100 (Ingenic Xburst)
+
+[    0.000000] FPU revision is: 00b70000
+
+[    0.000000] cgu_get_rate, parent = 1080000000, rate = 0, m = 0, n = 0, reg val = 0x081000ff
+
+[    0.000000] cgu_get_rate, parent = 1080000000, rate = 0, m = 0, n = 0, reg val = 0x081000ff
+
+[    0.000000] CCLK:1080MHz L2CLK:540Mhz H0CLK:200MHz H2CLK:200Mhz PCLK:100Mhz
+
+[    0.000000] Determined physical RAM map:
+
+[    0.000000]  memory: 00464000 @ 00010000 (usable)
+
+[    0.000000]  memory: 0003c000 @ 00474000 (usable after init)
+
+[    0.000000] User-defined physical RAM map:
+
+[    0.000000]  memory: 029e0000 @ 00000000 (usable)
+
+[    0.000000] Initial ramdisk at: 0x80600000 (7435776 bytes)
+
+[    0.000000] Zone ranges:
+
+[    0.000000]   Normal   [mem 0x00000000-0x029dffff]
+
+[    0.000000] Movable zone start for each node
+
+[    0.000000] Early memory node ranges
+
+[    0.000000]   node   0: [mem 0x00000000-0x029dffff]
+
+[    0.000000] On node 0 totalpages: 10720
+
+[    0.000000] free_area_init_node: node 0, pgdat 80472ff0, node_mem_map 81000000
+
+[    0.000000]   Normal zone: 84 pages used for memmap
+
+[    0.000000]   Normal zone: 0 pages reserved
+
+[    0.000000]   Normal zone: 10720 pages, LIFO batch:1
+
+[    0.000000] Primary instruction cache 32kB, 8-way, VIPT, linesize 32 bytes.
+
+[    0.000000] Primary data cache 32kB, 8-way, VIPT, no aliases, linesize 32 bytes
+
+[    0.000000] pls check processor_id[0x00d00100],sc_jz not support!
+
+[    0.000000] MIPS secondary cache 128kB, 8-way, linesize 32 bytes.
+
+[    0.000000] pcpu-alloc: s0 r0 d32768 u32768 alloc=1*32768
+
+[    0.000000] pcpu-alloc: [0] 0 
+
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping off.  Total pages: 10636
+
+[    0.000000] Kernel command line: console=ttyS2,115200n8 mem=42880K0x0 rmem=22656K@0x29E0000 root=/dev/ram0 rw rdinit=/linuxrc mtdparts=jz_sfc:256K(boot),352K(tag),2240K(kernel),3008K(rootfs),1728K(system),192K(config),32K(usr),64K(ae),256K(audio),32K(usr_bak),32K(vd),8M@0(all) lpj=6955008 quiet senv;[HW];ae_auto_learn=1;init_vw=2304;init_vh=1296;nrvbs=1;mode=0;select_mode=1;is_h264=0;pkg=149;uart1=1;MoveRectNums_x=16;MoveRectNums_y=10;adc_value=110;ext_devfunction1=2;close_led=0;person_det=0;[UBIA];main_bitrate=768;sub_bitrate=384;vide_flip=3;ai_vol=57;ao_vol=55;md_level=4;battery_cam=1;debug;person_level=2;time_format=0;osd_show=1;ModelNum=2254;vi_notalk=50;ptz_tp=1;ac_freq=1;workmode=0;again=122;[IR];ir_mode=auto;eenv; lzo_size=3048192 rd_start=0x80600000 rd_size=0x717600  ubootV=V027
+
+[    0.000000] ir_switch_parse mode: 2 threshold min:2000 max:2500
+
+[    0.000000] ir_switch_parse width:2304 height:1296 nrvbs:1
+
+[    0.000000] ir_switch_parse hight framerate mode change num:5
+
+[    0.000000] ir_switch_parse dayEv:0 nightEv:0 coeff:0 wbr:0 wbb:0
+
+[    0.000000] Sensor Calibration Mode:0
+
+[    0.000000] PID hash table entries: 256 (order: -2, 1024 bytes)
+
+[    0.000000] Dentry cache hash table entries: 8192 (order: 3, 32768 bytes)
+
+[    0.000000] Inode-cache hash table entries: 4096 (order: 2, 16384 bytes)
+
+[    0.000000] Memory: 28864k/42880k available (3608k kernel code, 14016k reserved, 885k data, 240k init, 0k highmem)
+
+[    0.000000] SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+
+[    0.000000] Preemptible hierarchical RCU implementation.
+
+[    0.000000] NR_IRQS:358
+
+[    0.000000] clockevents_config_and_register success.
+
+[    0.000019] Calibrating delay loop (skipped) preset value.. 1391.00 BogoMIPS (lpj=6955008)
+
+[    0.000032] pid_max: default: 32768 minimum: 301
+
+[    0.000262] Mount-cache hash table entries: 512
+
+[    0.000818] Initializing cgroup subsys debug
+
+[    0.000841] Initializing cgroup subsys freezer
+
+[    0.003104] NET: Registered protocol family 16
+
+[    0.003664] register process exit failed.
+
+[    0.004199] 1 gpio_set_func reg : b0010000
+
+[    0.004216] CPU: 0 PID: 1 Comm: swapper Not tainted 3.10.14-Archon #4
+
+[    0.004224] Stack : 00000006 8003bc54 00000000 804c0000 00000000 00000000 00000000 00000000
+
+[    0.004224] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.004224] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.004224] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.004224] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 8202bd50
+
+[    0.004224] 	  ...
+
+[    0.004322] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    0.004340] [<800214a8>] 0x800214a8
+
+[    0.004348] [<800214a8>] 0x800214a8
+
+[    0.004356] [<80391068>] 0x80391068
+
+[    0.004364] [<8006135c>] 0x8006135c
+
+[    0.004371] [<800188e8>] 0x800188e8
+
+[    0.004379] [<804785cc>] 0x804785cc
+
+[    0.004388] [<80478454>] 0x80478454
+
+[    0.004396] [<80474214>] 0x80474214
+
+[    0.004403] [<8001051c>] 0x8001051c
+
+[    0.004412] [<80474ab0>] 0x80474ab0
+
+[    0.004420] [<80474214>] 0x80474214
+
+[    0.004428] [<8003d6e0>] 0x8003d6e0
+
+[    0.004436] [<8038d508>] 0x8038d508
+
+[    0.004444] [<8038d518>] 0x8038d518
+
+[    0.004452] [<8038d508>] 0x8038d508
+
+[    0.004459] [<8038d508>] 0x8038d508
+
+[    0.004466] [<8001cb1c>] 0x8001cb1c
+
+[    0.004478] 
+
+[    0.007254] bio: create slab <bio-0> at 0
+
+[    0.009134] jz-dma jz-dma: JZ SoC DMA initialized
+
+[    0.009428] usbcore: registered new interface driver usbfs
+
+[    0.009483] usbcore: registered new interface driver hub
+
+[    0.009638] usbcore: registered new device driver usb
+
+[    0.009937] media: Linux media interface: v0.10
+
+[    0.009978] Linux video capture interface: v2.00
+
+[    0.010063] TTFF tx_isp_riscv_hf_prepare:316 tx_isp_stop_riscv start:315
+
+[    0.010077] AE Para ADDR = a3700000 HEAD:55aaaa55 SENSOR:20080428
+
+[    0.010088] TTFF tx_isp_riscv_hf_prepare:339 wait 8 frame done:315
+
+[    0.033318] TTFF tx_isp_riscv_hf_prepare:369 tx_isp_stop_riscv done:338
+
+[    0.033332] Current sensor again:2880 isp gain:1040 inttime:1124 luma:54 ev:3210
+
+[    0.033340] Current awb rgain:291 bgain:270
+
+[    0.033346] Riscv frame count:4
+
+[    0.033352] ----Tuning mode is:1
+
+[    0.033358] Tuning mode is:1
+
+[    0.033444] isp_memopt = 1
+
+[    0.033490] isp_ch0_pre_dequeue_time = 35
+
+[    0.033957] isp_ch0_pre_dequeue_valid_lines = 450
+
+[    0.033970] isp_isp_ch0_pre_dequeue_interrupt_process = 0
+
+[    0.034207] @@@@ tx-isp-probe ok(version H20220209a), compiler date=Nov 28 2022 @@@@@
+
+[    0.034738] probe ok ------->mis2008[20230517]
+
+[    0.034760] mis2008 chip found @ 0x30 (i2c0)
+
+[    0.035084] Calibration ADDR = a3830000
+
+[    0.040646] Calibration len = 159736
+
+[    0.040718] Calibration len = 159736
+
+[    0.040732] Load Sensor Setting DATE:calibration mode 0 MD5:calibration crc 3737022978
+
+[    0.040740] Calibration len = 159736
+
+[    0.043774] NCU: size = 3114816  paddr = 0x29e0000
+
+[    0.043792] set flip mode 3
+
+[    0.043814] g_is_night=1
+
+
+[    0.043823] isp_core_tuning_switch_day_or_night is day:0
+
+[    0.044836] Set vbus gpio 17
+
+
+[    0.044855] 2 gpio_set_func reg : b0010000
+
+[    0.044870] CPU: 0 PID: 1 Comm: swapper Not tainted 3.10.14-Archon #4
+
+[    0.044878] Stack : 00000006 8003bc54 00000000 804c0000 00000000 00000000 00000000 00000000
+
+[    0.044878] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.044878] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.044878] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.044878] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 8202bad8
+
+[    0.044878] 	  ...
+
+[    0.044976] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    0.044994] [<800214a8>] 0x800214a8
+
+[    0.045002] [<800214a8>] 0x800214a8
+
+[    0.045010] [<80391068>] 0x80391068
+
+[    0.045017] [<8001890c>] 0x8001890c
+
+[    0.045026] [<80018ed0>] 0x80018ed0
+
+[    0.045034] [<8018d17c>] 0x8018d17c
+
+[    0.045041] [<8038f1cc>] 0x8038f1cc
+
+[    0.045048] [<80390000>] 0x80390000
+
+[    0.045057] [<8038f1cc>] 0x8038f1cc
+
+[    0.045064] [<8018dd3c>] 0x8018dd3c
+
+[    0.045072] [<8038f1cc>] 0x8038f1cc
+
+[    0.045079] [<80390000>] 0x80390000
+
+[    0.045086] [<8038cc00>] 0x8038cc00
+
+[    0.045098] [<80328f74>] 0x80328f74
+
+[    0.045107] [<80474214>] 0x80474214
+
+[    0.045114] [<801b0544>] 0x801b0544
+
+[    0.045122] [<80392ddc>] 0x80392ddc
+
+[    0.045130] [<801b0684>] 0x801b0684
+
+[    0.045137] [<801b0700>] 0x801b0700
+
+[    0.045144] [<801ae5cc>] 0x801ae5cc
+
+[    0.045152] [<801ae754>] 0x801ae754
+
+[    0.045161] [<801b0058>] 0x801b0058
+
+[    0.045169] [<801afb84>] 0x801afb84
+
+[    0.045176] [<801adccc>] 0x801adccc
+
+[    0.045184] [<8016db30>] 0x8016db30
+
+[    0.045192] [<801b0b18>] 0x801b0b18
+
+[    0.045201] [<801b1b10>] 0x801b1b10
+
+[    0.045209] [<80474214>] 0x80474214
+
+[    0.045216] [<80325bf0>] 0x80325bf0
+
+[    0.045224] [<80127b60>] 0x80127b60
+
+[    0.045231] [<80487c04>] 0x80487c04
+
+[    0.045238] [<80487d44>] 0x80487d44
+
+[    0.045246] [<80487d94>] 0x80487d94
+
+[    0.045254] [<80487c64>] 0x80487c64
+
+[    0.045261] [<80487c04>] 0x80487c04
+
+[    0.045268] [<8001051c>] 0x8001051c
+
+[    0.045278] [<80474ab0>] 0x80474ab0
+
+[    0.045286] [<80474214>] 0x80474214
+
+[    0.045293] [<8003d6e0>] 0x8003d6e0
+
+[    0.045300] [<8038d508>] 0x8038d508
+
+[    0.045308] [<8038d518>] 0x8038d518
+
+[    0.045316] [<8038d508>] 0x8038d508
+
+[    0.045324] [<8038d508>] 0x8038d508
+
+[    0.045330] [<8001cb1c>] 0x8001cb1c
+
+[    0.045342] 
+
+[    0.045352] 2 gpio_set_func reg : b0010000
+
+[    0.045362] CPU: 0 PID: 1 Comm: swapper Not tainted 3.10.14-Archon #4
+
+[    0.045368] Stack : 00000006 8003bc54 00000000 804c0000 00000000 00000000 00000000 00000000
+
+[    0.045368] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.045368] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.045368] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.045368] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 8202baf0
+
+[    0.045368] 	  ...
+
+[    0.045464] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    0.045478] [<800214a8>] 0x800214a8
+
+[    0.045486] [<800214a8>] 0x800214a8
+
+[    0.045494] [<80391068>] 0x80391068
+
+[    0.045501] [<8001890c>] 0x8001890c
+
+[    0.045510] [<80018d24>] 0x80018d24
+
+[    0.045518] [<8018d658>] 0x8018d658
+
+[    0.045525] [<80390000>] 0x80390000
+
+[    0.045533] [<8018ddc8>] 0x8018ddc8
+
+[    0.045541] [<8038f1cc>] 0x8038f1cc
+
+[    0.045548] [<80390000>] 0x80390000
+
+[    0.045556] [<8038cc00>] 0x8038cc00
+
+[    0.045567] [<80328f74>] 0x80328f74
+
+[    0.045576] [<80474214>] 0x80474214
+
+[    0.045584] [<801b0544>] 0x801b0544
+
+[    0.045591] [<80392ddc>] 0x80392ddc
+
+[    0.045599] [<801b0684>] 0x801b0684
+
+[    0.045606] [<801b0700>] 0x801b0700
+
+[    0.045614] [<801ae5cc>] 0x801ae5cc
+
+[    0.045622] [<801ae754>] 0x801ae754
+
+[    0.045630] [<801b0058>] 0x801b0058
+
+[    0.045638] [<801afb84>] 0x801afb84
+
+[    0.045646] [<801adccc>] 0x801adccc
+
+[    0.045653] [<8016db30>] 0x8016db30
+
+[    0.045661] [<801b0b18>] 0x801b0b18
+
+[    0.045670] [<801b1b10>] 0x801b1b10
+
+[    0.045678] [<80474214>] 0x80474214
+
+[    0.045685] [<80325bf0>] 0x80325bf0
+
+[    0.045692] [<80127b60>] 0x80127b60
+
+[    0.045700] [<80487c04>] 0x80487c04
+
+[    0.045707] [<80487d44>] 0x80487d44
+
+[    0.045714] [<80487d94>] 0x80487d94
+
+[    0.045722] [<80487c64>] 0x80487c64
+
+[    0.045730] [<80487c04>] 0x80487c04
+
+[    0.045737] [<8001051c>] 0x8001051c
+
+[    0.045746] [<80474ab0>] 0x80474ab0
+
+[    0.045754] [<80474214>] 0x80474214
+
+[    0.045762] [<8003d6e0>] 0x8003d6e0
+
+[    0.045769] [<8038d508>] 0x8038d508
+
+[    0.045777] [<8038d518>] 0x8038d518
+
+[    0.045784] [<8038d508>] 0x8038d508
+
+[    0.045792] [<8038d508>] 0x8038d508
+
+[    0.045799] [<8001cb1c>] 0x8001cb1c
+
+[    0.045810] 
+
+[    0.045914] 2 gpio_set_func reg : b0010000
+
+[    0.045926] CPU: 0 PID: 1 Comm: swapper Not tainted 3.10.14-Archon #4
+
+[    0.045931] Stack : 00000006 8003bc54 00000000 804c0000 00000000 00000000 00000000 00000000
+
+[    0.045931] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.045931] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.045931] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.045931] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 8202bb10
+
+[    0.045931] 	  ...
+
+[    0.046028] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    0.046042] [<800214a8>] 0x800214a8
+
+[    0.046050] [<800214a8>] 0x800214a8
+
+[    0.046058] [<80391068>] 0x80391068
+
+[    0.046066] [<8001890c>] 0x8001890c
+
+[    0.046074] [<80018d24>] 0x80018d24
+
+[    0.046081] [<80390000>] 0x80390000
+
+[    0.046089] [<8018d658>] 0x8018d658
+
+[    0.046096] [<8018ddec>] 0x8018ddec
+
+[    0.046104] [<8038f1cc>] 0x8038f1cc
+
+[    0.046111] [<80390000>] 0x80390000
+
+[    0.046118] [<8038cc2c>] 0x8038cc2c
+
+[    0.046130] [<80328f74>] 0x80328f74
+
+[    0.046139] [<80474214>] 0x80474214
+
+[    0.046146] [<801b0544>] 0x801b0544
+
+[    0.046154] [<80392ddc>] 0x80392ddc
+
+[    0.046162] [<801b0684>] 0x801b0684
+
+[    0.046169] [<801b0700>] 0x801b0700
+
+[    0.046176] [<801ae5cc>] 0x801ae5cc
+
+[    0.046184] [<801ae754>] 0x801ae754
+
+[    0.046193] [<801b0058>] 0x801b0058
+
+[    0.046200] [<801afb84>] 0x801afb84
+
+[    0.046208] [<801adccc>] 0x801adccc
+
+[    0.046215] [<8016db30>] 0x8016db30
+
+[    0.046224] [<801b0b18>] 0x801b0b18
+
+[    0.046232] [<801b1b10>] 0x801b1b10
+
+[    0.046240] [<80474214>] 0x80474214
+
+[    0.046247] [<80325bf0>] 0x80325bf0
+
+[    0.046254] [<80127b60>] 0x80127b60
+
+[    0.046262] [<80487c04>] 0x80487c04
+
+[    0.046270] [<80487d44>] 0x80487d44
+
+[    0.046277] [<80487d94>] 0x80487d94
+
+[    0.046284] [<80487c64>] 0x80487c64
+
+[    0.046292] [<80487c04>] 0x80487c04
+
+[    0.046299] [<8001051c>] 0x8001051c
+
+[    0.046308] [<80474ab0>] 0x80474ab0
+
+[    0.046316] [<80474214>] 0x80474214
+
+[    0.046324] [<8003d6e0>] 0x8003d6e0
+
+[    0.046331] [<8038d508>] 0x8038d508
+
+[    0.046339] [<8038d518>] 0x8038d518
+
+[    0.046346] [<8038d508>] 0x8038d508
+
+[    0.046354] [<8038d508>] 0x8038d508
+
+[    0.046361] [<8001cb1c>] 0x8001cb1c
+
+[    0.046372] 
+
+[    0.046398] mis2008 stream on
+
+[    0.046421] Loop Count:30 Discard Frame:fffffff8
+
+[    0.046438] TTFF frame_channel_fast_start 181 W:2304 H:1296 N:1
+
+[    0.047230] Switching to clocksource jz_clocksource
+
+[    0.047820] NET: Registered protocol family 2
+
+[    0.048480] TCP established hash table entries: 512 (order: 0, 4096 bytes)
+
+[    0.048509] TCP bind hash table entries: 512 (order: -1, 2048 bytes)
+
+[    0.048527] TCP: Hash tables configured (established 512 bind 512)
+
+[    0.048587] TCP: reno registered
+
+[    0.048602] UDP hash table entries: 256 (order: 0, 4096 bytes)
+
+[    0.048624] UDP-Lite hash table entries: 256 (order: 0, 4096 bytes)
+
+[    0.048876] NET: Registered protocol family 1
+
+[    0.049236] Trying to unpack rootfs image as initramfs...
+
+[    0.050318] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:356
+
+[    0.083648] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:389
+
+[    0.117192] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:422
+
+[    0.122967] Freeing initrd memory: 7260K (80600000 - 80d17000)
+
+[    0.123248] freq_udelay_jiffys[0].max_num = 10
+
+[    0.123255] cpufreq 	udelay 	loops_per_jiffy	
+
+[    0.123262] 12000	 77277	 77277	
+
+[    0.123270] 24000	 154555	 154555	
+
+[    0.123276] 60000	 386389	 386389	
+
+[    0.123284] 120000	 772778	 772778	
+
+[    0.123291] 200000	 1287964	 1287964	
+
+[    0.123298] 300000	 1931946	 1931946	
+
+[    0.123306] 600000	 3863893	 3863893	
+
+[    0.123312] 792000	 5100339	 5100339	
+
+[    0.123320] 1008000	 6491340	 6491340	
+
+[    0.123327] 1200000	 7727786	 7727786	
+
+[    0.127812] msgmni has been set to 70
+
+[    0.129065] io scheduler noop registered
+
+[    0.129222] io scheduler cfq registered (default)
+
+[    0.129866] jz-uart.0: ttyS0 at MMIO 0x10030000 (irq = 59) is a uart0
+
+[    0.129995] jz-uart.1: ttyS1 at MMIO 0x10031000 (irq = 58) is a uart1
+
+[    0.130104] jz-uart.2: ttyS2 at MMIO 0x10032000 (irq = 57) is a uart2
+
+[    0.132551] console [ttyS2] enabled
+
+[    0.133612] brd: module loaded
+
+[    0.134108] loop: module loaded
+
+[    0.134607] zram: Created 2 device(s) ...
+
+[    0.134692] logger: created 256K log 'log_main'
+
+[    0.135232] jz SADC driver registeres over!
+
+[    0.136252] jz TCU driver register completed
+
+[    0.136562] tun: Universal TUN/TAP device driver, 1.6
+
+[    0.136574] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+
+[    0.136689] usbcore: registered new interface driver asix
+
+[    0.136748] usbcore: registered new interface driver ax88179_178a
+
+[    0.136783] usbcore: registered new interface driver cdc_ether
+
+[    0.136816] usbcore: registered new interface driver net1080
+
+[    0.136856] usbcore: registered new interface driver rndis_host
+
+[    0.136890] usbcore: registered new interface driver cdc_subset
+
+[    0.136923] usbcore: registered new interface driver zaurus
+
+[    0.137001] usbcore: registered new interface driver cdc_ncm
+
+[    0.137083] dwc2 otg probe start
+
+[    0.137112] jz-dwc2 jz-dwc2: cgu clk gate get error
+
+[    0.137139] DWC IN OTG MODE
+
+[    0.138138] dwc2 dwc2: Keep PHY ON
+
+[    0.138153] dwc2 dwc2: Using Buffer DMA mode
+
+[    0.138166] dwc2 dwc2: Core Release: 3.00a
+
+[    0.138220] dwc2 dwc2: DesignWare USB2.0 High-Speed Host Controller
+
+[    0.138246] dwc2 dwc2: new USB bus registered, assigned bus number 1
+
+[    0.139102] hub 1-0:1.0: USB hub found
+
+[    0.139126] hub 1-0:1.0: 1 port detected
+
+[    0.139258] dwc2 dwc2: DWC2 Host Initialized
+
+[    0.139324] dwc2 otg probe success
+
+[    0.139453] usbcore: registered new interface driver cdc_acm
+
+[    0.139463] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+
+[    0.139587] usbcore: registered new interface driver usbserial
+
+[    0.139623] usbcore: registered new interface driver option
+
+[    0.139656] usbserial: USB Serial support registered for GSM modem (1-port)
+
+[    0.139710] i2c /dev entries driver
+
+[    0.140290] usbcore: registered new interface driver usbhid
+
+[    0.140302] usbhid: USB HID core driver
+
+[    0.140366] jz_codec_register: probe() successful!
+
+[    0.140424] codec_fast_start init
+
+[    0.140534] cgu_set_rate, parent = 1080000000, rate = 2048000, n = 16875, reg val = 0x020041eb
+
+[    0.140547] cgu_enable,cgu_i2s_spk reg val = 0x220041eb
+
+[    0.140587] cgu_set_rate, parent = 1080000000, rate = 2048000, n = 16875, reg val = 0x020041eb
+
+[    0.140597] cgu_enable,cgu_i2s_mic reg val = 0x220041eb
+
+[    0.140612] codec_codec_ctl ignore init codec
+
+[    0.140994] dma dma0chan24: Channel 24 have been requested.(phy id 7,type 0x06 desc a0c25000)
+
+[    0.141486] dma dma0chan25: Channel 25 have been requested.(phy id 6,type 0x06 desc a0c26000)
+
+[    0.142005] dma dma0chan26: Channel 26 have been requested.(phy id 5,type 0x04 desc a0c27000)
+
+[    0.142506] TCP: cubic registered
+
+[    0.142959] NET: Registered protocol family 10
+
+[    0.143692] NET: Registered protocol family 17
+
+[    0.144618] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+
+[    0.147019] Freeing unused kernel memory: 240K (80474000 - 804b0000)
+
+[    0.162449] jz_sfc Build : Jan 11 2023 21:37:59
+
+[    0.162705] the id code = 204017, the flash name is XM25QH64C
+
+[    0.162716] the flash->board_info->quad_mode = 6b,WRSR_DATE=0x2
+
+[    0.162723] JZ SFC Controller for SFC channel 0 driver register
+
+[    0.162758] 12 cmdlinepart partitions found on MTD device jz_sfc
+
+[    0.162766] Creating 12 MTD partitions on "jz_sfc":
+
+[    0.162778] 0x000000000000-0x000000040000 : "boot"
+
+[    0.163270] 0x000000040000-0x000000098000 : "tag"
+
+[    0.163692] 0x000000098000-0x0000002c8000 : "kernel"
+
+[    0.164139] 0x0000002c8000-0x0000005b8000 : "rootfs"
+
+[    0.164579] 0x0000005b8000-0x000000768000 : "system"
+
+[    0.165026] 0x000000768000-0x000000798000 : "config"
+
+[    0.165500] 0x000000798000-0x0000007a0000 : "usr"
+
+[    0.165960] 0x0000007a0000-0x0000007b0000 : "ae"
+
+[    0.166435] 0x0000007b0000-0x0000007f0000 : "audio"
+
+[    0.166928] 0x0000007f0000-0x0000007f8000 : "usr_bak"
+
+[    0.167652] 0x0000007f8000-0x000000800000 : "vd"
+
+[    0.168132] 0x000000000000-0x000000800000 : "all"
+
+[    0.168576] SPI NOR MTD LOAD OK
+
+[    0.176463] jffs2: version 2.2. (NAND) (SUMMARY)  © 2001-2006 Red Hat, Inc.
+
+[    0.180077] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+
+[    0.183652] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:489
+
+[    0.216699] WARN: ch0 frame interrupt time ahead of pre dequeue time, userptr = 0x0, bufaddr = 0x2cd9000
+
+[    0.216714] WARN: ch0 frame interrupt time ahead of pre dequeue time
+
+[    0.221898] TTFF frame_channel_buffer_done:298 Chn:0 Buf:0 Write Done:527
+
+[    0.224061] gpio:jz->reg = 0xb0010000
+
+[    0.224074] gpio pin: 0x40
+
+[    0.224080] jz->dev_map[0]: 0x1f820cc0
+
+[    0.224095] CPU: 0 PID: 54 Comm: sh Not tainted 3.10.14-Archon #4
+
+[    0.224102] Stack : 00000006 8003bc54 00000000 804c0000 00000000 00000000 00000000 00000000
+
+[    0.224102] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.224102] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.224102] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    0.224102] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 80723d28
+
+[    0.224102] 	  ...
+
+[    0.224200] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    0.224218] [<800214a8>] 0x800214a8
+
+[    0.224226] [<800214a8>] 0x800214a8
+
+[    0.224233] [<80391068>] 0x80391068
+
+[    0.224240] [<8017e958>] 0x8017e958
+
+[    0.224248] [<80018e88>] 0x80018e88
+
+[    0.224256] [<80474900>] 0x80474900
+
+[    0.224263] [<8047493c>] 0x8047493c
+
+[    0.224271] [<8018d17c>] 0x8018d17c
+
+[    0.224278] [<8017f364>] 0x8017f364
+
+[    0.224287] [<8018dca0>] 0x8018dca0
+
+[    0.224294] [<80493280>] 0x80493280
+
+[    0.224302] [<8009cf94>] 0x8009cf94
+
+[    0.224310] [<80130c5c>] 0x80130c5c
+
+[    0.224318] [<80493280>] 0x80493280
+
+[    0.224326] [<800d08b0>] 0x800d08b0
+
+[    0.224334] [<80493280>] 0x80493280
+
+[    0.224342] [<800d0ce8>] 0x800d0ce8
+
+[    0.224350] [<800240fc>] 0x800240fc
+
+[    0.224361] 
+
+[    0.238218] dwc2 dwc2: ID PIN CHANGED!
+
+[    0.250316] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:556
+
+[    0.316983] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:622
+
+[    0.350052] TTFF frame_channel_buffer_done:298 Chn:1 Buf:0 Write Done:655
+
+[    0.350075] TTFF frame_channel_buffer_done:298 Chn:2 Buf:0 Write Done:655
+
+[    0.355230] TTFF frame_channel_buffer_done:298 Chn:0 Buf:0 Write Done:660
+
+[    0.383650] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:689
+
+[    0.398364] codec_codec_ctl: set repaly channel...
+
+[    0.398451] cgu_set_rate, parent = 1080000000, rate = 4096000, n = 16875, reg val = 0x240041eb
+
+[    0.398460] codec_codec_ctl: set sample rate...
+
+[    0.398577] codec_codec_ctl: set device...
+
+[    0.398586] codec_set_device ignore codec_set_speaker
+
+[    0.416719] TTFF frame_channel_buffer_done:298 Chn:1 Buf:0 Write Done:722
+
+[    0.416742] TTFF frame_channel_buffer_done:298 Chn:2 Buf:0 Write Done:722
+
+[    0.420176] TTFF frame_channel_buffer_done:298 Chn:0 Buf:0 Write Done:725
+
+[    0.450318] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:755
+
+[    0.483389] TTFF frame_channel_buffer_done:298 Chn:1 Buf:0 Write Done:788
+
+[    0.483412] TTFF frame_channel_buffer_done:298 Chn:2 Buf:0 Write Done:788
+
+[    0.488607] TTFF frame_channel_buffer_done:298 Chn:0 Buf:0 Write Done:794
+
+[    0.516990] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:822
+
+[    0.541886] zram0: detected capacity change from 0 to 16777216
+
+[    0.547191] Adding 16380k swap on /dev/zram0.  Priority:-1 extents:1 across:16380k SS
+
+[    0.550072] TTFF frame_channel_buffer_done:298 Chn:1 Buf:0 Write Done:855
+
+[    0.583650] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:889
+
+[    0.586909] cgu_set_rate, parent = 1080000000, rate = 4096000, n = 16875, reg val = 0x240041eb
+
+[    0.586924] codec_codec_ctl: set sample rate...
+
+[    0.587125] codec_codec_ctl: set device...
+
+[    0.587133] codec_set_device ignore codec_set_buildin_mic
+
+[    0.621487] wait stable.[289][cgu_msc0]
+
+[    0.627869] jzmmc_v1.2 jzmmc_v1.2.0: register success!
+
+[    0.631843] jzmmc_v1.2 jzmmc_v1.2.1: register success!
+
+[    0.650317] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:955
+
+[    0.687432] speak init complate
+
+[    0.697353] codec init complate
+
+[    0.697474] usb 1-1: new high-speed USB device number 2 using dwc2
+
+[    0.697658] codec_fast_start done
+
+[    0.716989] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:1022
+
+[    0.783659] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:1089
+
+[    0.850319] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:1155
+
+[    0.916982] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:1222
+
+[    0.937697] cdc_acm 1-1:1.0: This device cannot do calls on its own. It is not a modem.
+
+[    0.967664] cdc_acm 1-1:1.0: ttyACM0: USB ACM device
+
+[    0.983661] TTFF isp_vic_interrupt_service_routine:898 Chn:0  Frame  Start:1289
+
+[    1.117325] jzmmc_v1.2 jzmmc_v1.2.0: card inserted, state=0
+
+[    1.283066] Discard Frame Recovery
+
+[    1.934144] usb 1-1: USB disconnect, device number 2
+
+[    2.240899] gpio:jz->reg = 0xb0010000
+
+[    2.241463] gpio pin: 0x80
+
+[    2.241477] jz->dev_map[0]: 0x1f830cc0
+
+[    2.241492] CPU: 0 PID: 174 Comm: sh Not tainted 3.10.14-Archon #4
+
+[    0.224368] arch/mips/xburst/soc-t31/common/gpio.c:gpio functions has redefinition
+
+[    2.241501] Stack : 00000006 8003bc54 00000000 804c0000 00000000 00000000 00000000 00000000
+
+[    2.241507] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.241507] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.241507] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.241507] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 81603d28
+
+[    2.241507] 	  ...
+
+[    2.241600] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    2.241617] [<800214a8>] 0x800214a8
+
+[    2.241625] [<800214a8>] 0x800214a8
+
+[    2.241633] [<80391068>] 0x80391068
+
+[    2.241640] [<8017e958>] 0x8017e958
+
+[    2.241647] [<80018e88>] 0x80018e88
+
+[    2.241656] [<8018d17c>] 0x8018d17c
+
+[    2.241664] [<8017f364>] 0x8017f364
+
+[    2.241672] [<8018dca0>] 0x8018dca0
+
+[    2.241680] [<8009cf94>] 0x8009cf94
+
+[    2.241688] [<80130c5c>] 0x80130c5c
+
+[    2.241697] [<800d08b0>] 0x800d08b0
+
+[    2.241705] [<800d0ce8>] 0x800d0ce8
+
+[    2.241714] [<800240fc>] 0x800240fc
+
+[    2.241725] 
+
+[    2.342921] ------------[ cut here ]------------
+
+[    2.342941] WARNING: at drivers/gpio/gpiolib.c:160 0x8018d300()
+
+[    2.342948] autorequest GPIO-50
+
+[    2.241731] arch/mips/xburst/soc-t31/common/gpio.c:gpio functions has redefinition
+
+[    2.342955] Modules linked in: alarm_led(O+) vfat fat mmc_block jzmmc mmc_core squashfs jffs2 jz_sfc
+
+[    2.342998] CPU: 0 PID: 182 Comm: insmod Tainted: G           O 3.10.14-Archon #4
+
+[    2.343007] Stack : 00000006 8003bc54 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.343007] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.343007] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.343007] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.343007] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 8156dc38
+
+[    2.343007] 	  ...
+
+[    2.343103] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    2.343120] [<800214a8>] 0x800214a8
+
+[    2.343129] [<800214a8>] 0x800214a8
+
+[    2.343136] [<80391068>] 0x80391068
+
+[    2.343144] [<8018d300>] 0x8018d300
+
+[    2.343151] [<8003926c>] 0x8003926c
+
+[    2.343160] [<8018d300>] 0x8018d300
+
+[    2.343168] [<80039324>] 0x80039324
+
+[    2.343176] [<8018d300>] 0x8018d300
+
+[    2.343184] [<80392ddc>] 0x80392ddc
+
+[    2.343192] [<8018d5dc>] 0x8018d5dc
+
+[    2.343200] [<8018d6f4>] 0x8018d6f4
+
+[    2.343207] [<80390000>] 0x80390000
+
+[    2.343215] [<c01e3058>] 0xc01e3058
+
+[    2.343223] [<800c9f08>] 0x800c9f08
+
+[    2.343230] [<800c1a7c>] 0x800c1a7c
+
+[    2.343238] [<c01e3000>] 0xc01e3000
+
+[    2.343245] [<8001051c>] 0x8001051c
+
+[    2.343253] [<800c1c58>] 0x800c1c58
+
+[    2.343261] [<80081748>] 0x80081748
+
+[    2.343270] [<8007e8e0>] 0x8007e8e0
+
+[    2.343278] [<80081a84>] 0x80081a84
+
+[    2.343287] [<800c20cc>] 0x800c20cc
+
+[    2.343299] [<80081b0c>] 0x80081b0c
+
+[    2.343311] [<800240fc>] 0x800240fc
+
+[    2.343321] 
+
+[    2.343329] ---[ end trace 138cd78a39eb2827 ]---
+
+[    2.343342] ------------[ cut here ]------------
+
+[    2.343351] WARNING: at drivers/gpio/gpiolib.c:160 0x8018d300()
+
+[    2.343357] autorequest GPIO-53
+
+[    2.343363] Modules linked in: alarm_led(O+) vfat fat mmc_block jzmmc mmc_core squashfs jffs2 jz_sfc
+
+[    2.343394] CPU: 0 PID: 182 Comm: insmod Tainted: G        W  O 3.10.14-Archon #4
+
+[    2.343400] Stack : 00000006 8003bc54 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.343400] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.343400] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.343400] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.343400] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 8156dc38
+
+[    2.343400] 	  ...
+
+[    2.343495] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    2.343509] [<800214a8>] 0x800214a8
+
+[    2.343517] [<800214a8>] 0x800214a8
+
+[    2.343525] [<80391068>] 0x80391068
+
+[    2.343533] [<8018d300>] 0x8018d300
+
+[    2.343540] [<8003926c>] 0x8003926c
+
+[    2.343548] [<8018d300>] 0x8018d300
+
+[    2.343556] [<80039324>] 0x80039324
+
+[    2.343563] [<80018ad4>] 0x80018ad4
+
+[    2.343571] [<8018d300>] 0x8018d300
+
+[    2.343579] [<80018d24>] 0x80018d24
+
+[    2.343587] [<8018d5dc>] 0x8018d5dc
+
+[    2.343595] [<8018d6f4>] 0x8018d6f4
+
+[    2.343602] [<80390000>] 0x80390000
+
+[    2.343610] [<c01e3064>] 0xc01e3064
+
+[    2.343617] [<800c9f08>] 0x800c9f08
+
+[    2.343625] [<800c1a7c>] 0x800c1a7c
+
+[    2.343633] [<c01e3000>] 0xc01e3000
+
+[    2.343640] [<8001051c>] 0x8001051c
+
+[    2.343648] [<800c1c58>] 0x800c1c58
+
+[    2.343657] [<80081748>] 0x80081748
+
+[    2.343665] [<8007e8e0>] 0x8007e8e0
+
+[    2.343673] [<80081a84>] 0x80081a84
+
+[    2.343681] [<800c20cc>] 0x800c20cc
+
+[    2.343692] [<80081b0c>] 0x80081b0c
+
+[    2.343704] [<800240fc>] 0x800240fc
+
+[    2.343715] 
+
+[    2.343721] ---[ end trace 138cd78a39eb2828 ]---
+
+[    2.343732] 
+
+
+[    2.343732] ##alarmled  misc_register ok. ver=Jul  6 2022, 17:14:45.
+
+
+[    2.377347] mmc0: new SDXC card at address 0001
+
+[    2.386925] mmcblk0: mmc0:0001 SD 119 GiB 
+
+[    2.389104]  mmcblk0: p1
+
+[    2.841890] FAT-fs (mmcblk0p1): bogus number of reserved sectors
+
+[    2.924768] 1 gpio_set_func reg : b0011000
+
+[    2.924791] CPU: 0 PID: 218 Comm: sh Tainted: G        W  O 3.10.14-Archon #4
+
+[    2.924799] Stack : 00000006 8003bc54 00000000 804c0000 00000000 00000000 00000000 00000000
+
+[    2.924799] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.924799] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.924799] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.924799] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 8131dd08
+
+[    2.924799] 	  ...
+
+[    2.924897] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    2.924916] [<800214a8>] 0x800214a8
+
+[    2.924924] [<800214a8>] 0x800214a8
+
+[    2.924931] [<80391068>] 0x80391068
+
+[    2.924939] [<800188e8>] 0x800188e8
+
+[    2.924947] [<80018ed0>] 0x80018ed0
+
+[    2.924955] [<80476478>] 0x80476478
+
+[    2.924963] [<8018d17c>] 0x8018d17c
+
+[    2.924971] [<8017f364>] 0x8017f364
+
+[    2.924979] [<8018dca0>] 0x8018dca0
+
+[    2.924987] [<8009cf94>] 0x8009cf94
+
+[    2.924995] [<80130c5c>] 0x80130c5c
+
+[    2.925004] [<800d08b0>] 0x800d08b0
+
+[    2.925012] [<800d0ce8>] 0x800d0ce8
+
+[    2.925021] [<800240fc>] 0x800240fc
+
+[    2.925032] 
+
+[    2.927388] FAT-fs (mmcblk0p1): Can't find a valid FAT filesystem
+
+[    2.965445] 1 gpio_set_func reg : b0011000
+
+[    2.965472] CPU: 0 PID: 220 Comm: sh Tainted: G        W  O 3.10.14-Archon #4
+
+[    2.965480] Stack : 00000006 8003bc54 00000000 804c0000 00000000 00000000 00000000 00000000
+
+[    2.965480] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.965480] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.965480] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+[    2.965480] 	  00000000 00000000 00000000 00000000 00000000 00000000 00000000 81211d28
+
+[    2.965480] 	  ...
+
+[    2.965579] Call Trace:[<8003bc54>] 0x8003bc54
+
+[    2.965597] [<800214a8>] 0x800214a8
+
+[    2.965605] [<800214a8>] 0x800214a8
+
+[    2.965612] [<80391068>] 0x80391068
+
+[    2.965620] [<800188e8>] 0x800188e8
+
+[    2.965628] [<80018d24>] 0x80018d24
+
+[    2.965637] [<8018d658>] 0x8018d658
+
+[    2.965645] [<80392ddc>] 0x80392ddc
+
+[    2.965653] [<8018e3b4>] 0x8018e3b4
+
+[    2.965660] [<8009cf94>] 0x8009cf94
+
+[    2.965668] [<80130c5c>] 0x80130c5c
+
+[    2.965677] [<800d08b0>] 0x800d08b0
+
+[    2.965686] [<800d0ce8>] 0x800d0ce8
+
+[    2.965694] [<800240fc>] 0x800240fc
+
+[    2.965705] 
+
+[    2.987185] jz-sfc jz-sfc: get write done is :0
+
+[    3.943171] FAT-fs (mmcblk0p1): bogus number of reserved sectors
+
+[    3.973162] FAT-fs (mmcblk0p1): Can't find a valid FAT filesystem
