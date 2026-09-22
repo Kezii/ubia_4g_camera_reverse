@@ -1,0 +1,114 @@
+#!/bin/sh
+# ============================================================================
+# ubia_test — Phase-0 probe for the UBox/UBIA T31 4G trail camera
+# ----------------------------------------------------------------------------
+# If the vendor firmware auto-runs a file named "ubia_test" from the SD card
+# root (confirmed behaviour on the sibling T23 model, same UBIA/Mirui SDK),
+# this script runs as ROOT on every boot/wake and:
+#   - writes probe.log  (who started it, passwd/shadow/inittab, /proc/mtd,
+#                        mounts, process list, busybox applet list)
+#   - dumps the FULL 8 MiB SPI NOR flash to flash.bin (skip if complete)
+# It is pure-read + writes only to the SD card. It never kills processes,
+# never reboots, never touches config. Everything heavy runs in a background
+# subshell so the boot path (and the 30s hardware watchdog) is never blocked.
+# ============================================================================
+
+# ---- locate the SD mount point (wait up to ~30 s) --------------------------
+find_sd() {
+    SD=""
+    while read -r dev mnt fstype rest; do
+        case "$dev" in
+            *mmcblk0*) SD="$mnt" ;;
+        esac
+    done < /proc/mounts 2>/dev/null
+    echo "$SD"
+}
+
+SD=$(find_sd)
+i=0
+while [ -z "$SD" ] && [ "$i" -lt 30 ]; do
+    sleep 1
+    i=$((i+1))
+    SD=$(find_sd)
+done
+[ -n "$SD" ] || exit 0
+
+# ---- background the whole payload (watchdog safety) ------------------------
+(
+    # simple lock so a double-run can't corrupt flash.bin
+    if ! mkdir "$SD/.probe_lock" 2>/dev/null; then
+        echo "=== probe: lock held, another run active, exiting ===" >> "$SD/probe.log" 2>/dev/null
+        exit 0
+    fi
+
+    echo "=== ubia_test probe run @ $(date) ===" >> "$SD/probe.log"
+    echo "invoked_as=$0 pid=$$ ppid=$PPID" >> "$SD/probe.log"
+    echo "parent_cmdline: $(tr '\0' ' ' < /proc/$PPID/cmdline 2>/dev/null)" >> "$SD/probe.log"
+    echo "uptime: $(cat /proc/uptime 2>/dev/null)" >> "$SD/probe.log"
+    id >> "$SD/probe.log" 2>&1
+
+    echo "--- /proc/cmdline ---" >> "$SD/probe.log"
+    cat /proc/cmdline >> "$SD/probe.log" 2>&1
+    echo "--- /proc/mtd ---" >> "$SD/probe.log"
+    cat /proc/mtd >> "$SD/probe.log" 2>&1
+    echo "--- /proc/mounts ---" >> "$SD/probe.log"
+    cat /proc/mounts >> "$SD/probe.log" 2>&1
+    echo "--- /etc/passwd ---" >> "$SD/probe.log"
+    cat /etc/passwd >> "$SD/probe.log" 2>&1
+    echo "--- /etc/shadow ---" >> "$SD/probe.log"
+    cat /etc/shadow >> "$SD/probe.log" 2>&1
+    echo "--- /etc/inittab ---" >> "$SD/probe.log"
+    cat /etc/inittab >> "$SD/probe.log" 2>&1
+    echo "--- ps w ---" >> "$SD/probe.log"
+    ps w >> "$SD/probe.log" 2>&1
+    echo "--- ls /system/bin /usr/bin /bin /sbin ---" >> "$SD/probe.log"
+    ls -la /system/bin /usr/bin /bin /sbin >> "$SD/probe.log" 2>&1
+    echo "--- busybox applets ---" >> "$SD/probe.log"
+    busybox 2>&1 | head -80 >> "$SD/probe.log"
+    echo "--- tool availability ---" >> "$SD/probe.log"
+    for t in nc tftp telnetd wget curl ash busybox dd blockdev md5sum cksum awk; do
+        echo "$t: $(command -v $t 2>/dev/null)" >> "$SD/probe.log"
+    done
+    echo "--- uname ---" >> "$SD/probe.log"
+    uname -a >> "$SD/probe.log" 2>&1
+    echo "--- cpuinfo (head) ---" >> "$SD/probe.log"
+    head -15 /proc/cpuinfo >> "$SD/probe.log" 2>&1
+    echo "--- /proc/net/udp ---" >> "$SD/probe.log"
+    head -20 /proc/net/udp >> "$SD/probe.log" 2>&1
+    echo "--- /proc/net/tcp ---" >> "$SD/probe.log"
+    head -20 /proc/net/tcp >> "$SD/probe.log" 2>&1
+
+    # ---- the main event: full flash dump ----------------------------------
+    # find the biggest mtd block device = the "all" partition (8 MiB @ 0)
+    FULLDEV=""
+    best=0
+    for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13; do
+        d="/dev/mtdblock$i"
+        [ -b "$d" ] || continue
+        sz=$(blockdev --getsize64 "$d" 2>/dev/null)
+        [ -n "$sz" ] || continue
+        if [ "$sz" -gt "$best" ]; then best=$sz; FULLDEV=$d; fi
+    done
+    [ -n "$FULLDEV" ] || FULLDEV=/dev/mtdblock11
+
+    SZ=$(wc -c < "$SD/flash.bin" 2>/dev/null)
+    if [ "$SZ" != "8388608" ]; then
+        echo "--- dumping $FULLDEV -> $SD/flash.bin ---" >> "$SD/probe.log"
+        dd if="$FULLDEV" of="$SD/flash.bin" bs=4096 conv=fsync >> "$SD/probe.log" 2>&1
+        echo "dd_exit=$?" >> "$SD/probe.log"
+    else
+        echo "--- flash.bin already complete, skipping dump ---" >> "$SD/probe.log"
+    fi
+    sync
+
+    echo "--- flash.bin info ---" >> "$SD/probe.log"
+    ls -l "$SD/flash.bin" >> "$SD/probe.log" 2>&1
+    cksum "$SD/flash.bin" >> "$SD/probe.log" 2>&1
+    md5sum "$SD/flash.bin" >> "$SD/probe.log" 2>&1
+
+    echo "=== probe done @ $(date) ===" >> "$SD/probe.log"
+    rmdir "$SD/.probe_lock" 2>/dev/null
+) </dev/null >/dev/null 2>&1 &
+
+# never wait for the payload; exit immediately
+exit 0

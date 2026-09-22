@@ -1,0 +1,307 @@
+=== ubia_test probe run @ Sat Feb  1 00:00:01 UTC 2025 ===
+invoked_as=/tmp/mnt/sdcard/ubia_test pid=230 ppid=1
+parent_cmdline: init     
+uptime: 3.52 0.20
+uid=0(root) gid=0(root)
+--- /proc/cmdline ---
+console=ttyS2,115200n8 mem=42880K0x0 rmem=22656K@0x29E0000 root=/dev/ram0 rw rdinit=/linuxrc mtdparts=jz_sfc:256K(boot),352K(tag),2240K(kernel),3008K(rootfs),1728K(system),192K(config),32K(usr),64K(ae),256K(audio),32K(usr_bak),32K(vd),8M@0(all) lpj=6955008 quiet senv;[HW];ae_auto_learn=1;init_vw=2304;init_vh=1296;nrvbs=1;mode=0;select_mode=1;is_h264=0;pkg=149;uart1=1;MoveRectNums_x=16;MoveRectNums_y=10;adc_value=110;ext_devfunction1=2;close_led=0;person_det=0;[UBIA];main_bitrate=768;sub_bitrate=384;vide_flip=3;ai_vol=57;ao_vol=55;md_level=4;battery_cam=1;debug;person_level=2;time_format=0;osd_show=1;ModelNum=2254;vi_notalk=50;ptz_tp=1;ac_freq=1;workmode=0;again=122;[IR];ir_mode=auto;eenv; lzo_size=3048192 rd_start=0x80600000 rd_size=0x717600  ubootV=V027
+--- /proc/mtd ---
+dev:    size   erasesize  name
+mtd0: 00040000 00001000 "boot"
+mtd1: 00058000 00001000 "tag"
+mtd2: 00230000 00008000 "kernel"
+mtd3: 002f0000 00008000 "rootfs"
+mtd4: 001b0000 00008000 "system"
+mtd5: 00030000 00008000 "config"
+mtd6: 00008000 00008000 "usr"
+mtd7: 00010000 00001000 "ae"
+mtd8: 00040000 00001000 "audio"
+mtd9: 00008000 00001000 "usr_bak"
+mtd10: 00008000 00001000 "vd"
+mtd11: 00800000 00008000 "all"
+--- /proc/mounts ---
+rootfs / rootfs rw 0 0
+proc /proc proc rw,relatime 0 0
+devpts /dev/pts devpts rw,relatime,gid=5,mode=620,ptmxmode=000 0 0
+tmpfs /dev/shm tmpfs rw,relatime,mode=777 0 0
+sysfs /sys sysfs rw,relatime 0 0
+/dev/mtdblock5 /config jffs2 rw,relatime 0 0
+/dev/mtdblock4 /system squashfs ro,relatime 0 0
+/dev/mtdblock8 /audio squashfs ro,relatime 0 0
+/dev/mmcblk0p1 /tmp/mnt/sdcard vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 0
+--- /etc/passwd ---
+root:ShRCX9PD3xxus:0:0:root:/:/bin/sh
+messagebus:x:0:0:messagebus:/:/bin/sh
+--- /etc/shadow ---
+root::10933:0:99999:7:::
+--- /etc/inittab ---
+# /etc/inittab
+#
+# Copyright (C) 2001 Erik Andersen <andersen@codepoet.org>
+#
+# Note: BusyBox init doesn't support runlevels.  The runlevels field is
+# completely ignored by BusyBox init. If you want runlevels, use
+# sysvinit.
+#
+# Format for each entry: <id>:<runlevels>:<action>:<process>
+#
+# id        == tty to run on, or empty for /dev/console
+# runlevels == ignored
+# action    == one of sysinit, respawn, askfirst, wait, and once
+# process   == program to run
+
+# Startup the system
+#::sysinit:/sbin/swapoff -a
+#::sysinit:/bin/mount -t tmpfs tmpfs /dev
+#::sysinit:/bin/mkdir -p /dev/pts
+#::sysinit:/bin/mkdir -p /dev/shm
+::sysinit:/bin/mount -a
+#::sysinit:/bin/hostname -F /etc/hostname
+
+# now run any rc scripts
+::sysinit:/etc/init.d/rcS
+
+# Put a getty on the serial port
+console::respawn:/sbin/getty -L console 115200 vt100 # GENERIC_SERIAL
+
+# Stuff to do for the 3-finger salute
+#::ctrlaltdel:/sbin/reboot
+
+# Stuff to do before rebooting
+::shutdown:/bin/umount -a -r
+--- ps w ---
+  PID USER       VSZ STAT COMMAND
+    1 root      1440 S    {linuxrc} init
+    2 root         0 SW   [kthreadd]
+    3 root         0 SW   [ksoftirqd/0]
+    4 root         0 SW   [kworker/0:0]
+    5 root         0 SW<  [kworker/0:0H]
+    6 root         0 SW   [kworker/u2:0]
+    7 root         0 SW   [rcu_preempt]
+    8 root         0 SW   [rcu_bh]
+    9 root         0 SW   [rcu_sched]
+   10 root         0 SW   [watchdog/0]
+   11 root         0 SW<  [khelper]
+   12 root         0 SW<  [writeback]
+   13 root         0 SW<  [bioset]
+   14 root         0 SW<  [kblockd]
+   15 root         0 SW   [khubd]
+   16 root         0 SW   [irq/37-isp-m0]
+   17 root         0 SW   [irq/38-isp-w02]
+   18 root         0 SW   [kworker/u2:1]
+   21 root         0 DW   [isp_fw_process]
+   22 root         0 SW   [kworker/0:1]
+   23 root         0 SW   [kworker/0:2]
+   24 root         0 SW   [kswapd0]
+   25 root         0 SW   [fsnotify_mark]
+   26 root         0 SW<  [crypto]
+   40 root         0 SW<  [deferwq]
+   41 root         0 SW   [kworker/0:3]
+   49 root     18992 S    /bin/ubia_watchdog
+   50 root      265m S    ./ubia_first
+   92 root         0 DW   [kworker/0:4]
+  121 root         0 SWN  [jffs2_gcd_mtd5]
+  123 root         0 SW<  [kworker/0:1H]
+  141 root         0 SW   [kworker/u2:2]
+  156 root      141m S    /system/ubia_t31
+  157 root      1440 S    /sbin/getty -L console 115200 vt100
+  194 root         0 SW   [mmcqd/0]
+  232 root      1444 S    {ubia_test} /bin/sh /tmp/mnt/sdcard/ubia_test
+  244 root      1432 R    ps w
+--- ls /system/bin /usr/bin /bin /sbin ---
+ls: /system/bin: No such file or directory
+/bin:
+drwxrwxr-x    2 1031     1031             0 Jan  6  2026 .
+drwxrwxr-x   19 1031     1031             0 Mar 14  2025 ..
+-rwxrwxr-x    1 1031     1031        130748 Mar 14  2025 adownload-tiny
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 ash -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 basename -> busybox
+-rwxrwxr-x    1 1031     1031        530924 Mar 14  2025 busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 cat -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 chmod -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 chown -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 clear -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 cp -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 date -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 dd -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 df -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 diff -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 dirname -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 dmesg -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 dnsdomainname -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 du -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 dumpleases -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 echo -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 egrep -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 env -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 fgrep -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 find -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 free -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 fsync -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 fuser -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 getopt -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 grep -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 groups -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 hostname -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 hush -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 id -> busybox
+-rwxrwxr-x    1 1031     1031        174592 Mar 14  2025 impdbg
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 iostat -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 ipcrm -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 ipcs -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 kill -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 killall -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 ln -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 logger -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 login -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 ls -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 lsof -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 lsusb -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 md5sum -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 mesg -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 mkdir -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 mknod -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 mktemp -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 mount -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 mountpoint -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 mv -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 netstat -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 nslookup -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 pgrep -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 pidof -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 ping -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 ping6 -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 pkill -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 pmap -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 printenv -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 printf -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 ps -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 pstree -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 pwd -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 reset -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 rm -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 rmdir -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 seq -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 sh -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 sleep -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 stat -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 sync -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 tar -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 tftp -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 time -> busybox
+-rwxrwxr-x    1 1031     1031          8638 Mar 14  2025 to_t31
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 top -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 touch -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 tr -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 traceroute -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 traceroute6 -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 tty -> busybox
+-rwxrwxr-x    1 1031     1031       2883068 Jan  6  2026 ubia_first
+-rwxrwxr-x    1 1031     1031          5552 Mar 14  2025 ubia_unlock_flash
+-rwxrwxr-x    1 1031     1031         31136 Jan  6  2026 ubia_watchdog
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 umount -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 uname -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 unzip -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 uptime -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 usleep -> busybox
+-rwxrwxr-x    1 1031     1031            58 Mar 14  2025 uvc_license
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 vi -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 watch -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 xargs -> busybox
+lrwxrwxrwx    1 1031     1031             7 Mar 14  2025 yes -> busybox
+
+/sbin:
+drwxrwxr-x    2 1031     1031             0 Mar 14  2025 .
+drwxrwxr-x   19 1031     1031             0 Mar 14  2025 ..
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 arp -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 arping -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 blkid -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 bootchartd -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 brctl -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 chroot -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 depmod -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 devmem -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 dhcprelay -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 dnsd -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 fdisk -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 flash_eraseall -> ../bin/busybox
+-rwxrwxr-x    1 1031     1031         17588 Mar 14  2025 flashcp
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 freeramdisk -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 getty -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 halt -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 hwclock -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 ifconfig -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 init -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 insmod -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 killall5 -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 klogd -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 logread -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 losetup -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 lsmod -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 mdev -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 mkdosfs -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 mkfs.vfat -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 mkswap -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 modinfo -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 modprobe -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 poweroff -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 rdate -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 rdev -> ../bin/busybox
+-rwxrwxr-x    1 1031     1031            65 Mar 14  2025 reboot
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 rmmod -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 route -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 setconsole -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 swapoff -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 swapon -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 switch_root -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 sysctl -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 syslogd -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 telnetd -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 udhcpc -> ../bin/busybox
+lrwxrwxrwx    1 1031     1031            14 Mar 14  2025 udhcpd -> ../bin/busybox
+
+/usr/bin:
+drwxrwxr-x    2 1031     1031             0 Mar 14  2025 .
+drwxrwxr-x    5 1031     1031             0 Mar 14  2025 ..
+-rwxrwxr-x    1 1031     1031          4400 Mar 14  2025 bootup_timer
+-rwxrwxr-x    1 1031     1031            98 Mar 14  2025 fsck_mount_mmc.sh
+-rwxrwxr-x    1 1031     1031           237 Mar 14  2025 insmod_mmc
+-rwxrwxr-x    1 1031     1031           157 Mar 14  2025 insmod_sfc
+-rwxrwxr-x    1 1031     1031           153 Mar 14  2025 insmod_vfat
+-rwxrwxr-x    1 1031     1031           420 Mar 14  2025 insmod_wifi
+-rwxrwxr-x    1 1031     1031         26376 Mar 14  2025 logcat
+-rwxrwxr-x    1 1031     1031            68 Mar 14  2025 shutdown.sh
+-rwxrwxr-x    1 1031     1031         13392 Mar 14  2025 tag_env_info
+-rwxrwxr-x    1 1031     1031            43 Mar 14  2025 umount_mmc.sh
+--- busybox applets ---
+--- tool availability ---
+nc: 
+tftp: /bin/tftp
+telnetd: /sbin/telnetd
+wget: 
+curl: 
+ash: /bin/ash
+busybox: /bin/busybox
+dd: /bin/dd
+blockdev: 
+md5sum: /bin/md5sum
+cksum: 
+awk: 
+--- uname ---
+Linux Zeratul 3.10.14-Archon #4 PREEMPT Thu Mar 6 18:29:09 CST 2025 mips GNU/Linux
+--- cpuinfo (head) ---
+/tmp/mnt/sdcard/ubia_test: line 116: head: not found
+--- /proc/net/udp ---
+/tmp/mnt/sdcard/ubia_test: line 116: head: not found
+--- /proc/net/tcp ---
+/tmp/mnt/sdcard/ubia_test: line 116: head: not found
+--- dumping /dev/mtdblock11 -> /tmp/mnt/sdcard/flash.bin ---
+2048+0 records in
+2048+0 records out
+8388608 bytes (8.0MB) copied, 23.284592 seconds, 351.8KB/s
+dd_exit=0
+--- flash.bin info ---
+-rwxr-xr-x    1 root     root       8388608 Feb  1 00:00 /tmp/mnt/sdcard/flash.bin
+/tmp/mnt/sdcard/ubia_test: line 116: cksum: not found
+0b047e954b15153dc2d6b499467d580d  /tmp/mnt/sdcard/flash.bin
+=== probe done @ Sat Feb  1 00:00:25 UTC 2025 ===
