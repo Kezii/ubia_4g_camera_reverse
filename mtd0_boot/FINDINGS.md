@@ -6,7 +6,8 @@ Format: **raw U-Boot binary** (not a uImage — this is the first-stage bootload
 ## Identity (from strings)
 
 - Version banner: `V027`, build date `20230830`, product `Turret-ZL`.
-- `devname=volpi`.
+- `devname=volpi` — the user-configurable camera name (set from the
+  app), not a hardware identifier.
 - Ingenic T31 (JZT31) boot: loads senv from the `tag` partition, picks A/B
   slot, assembles the kernel command line, decompresses the kernel/rootfs
   LZOF containers.
